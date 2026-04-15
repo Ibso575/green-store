@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingCart, Star, Plus, Heart } from 'lucide-react';
+import { ShoppingCart, Star, Plus, Heart, GitCompare, Eye } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { addItem } from '../store/cartSlice';
 import { Link } from 'react-router-dom';
@@ -13,73 +13,99 @@ const ProductCard = ({ product }) => {
     dispatch(addItem(product));
   };
 
-  return (
-    <div className="group bg-white rounded-[24px] overflow-hidden border border-slate-100 hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 relative flex flex-col h-full">
-      {/* Favorite Button */}
-      <button className="absolute top-4 right-4 z-10 p-2 bg-white/80 backdrop-blur-md rounded-full text-slate-400 hover:text-rose-500 transition-colors shadow-sm">
-        <Heart className="w-4 h-4" />
-      </button>
+  // Badge logic based on dummy data
+  const getBadge = () => {
+    if (product.discountPercentage > 15) return { text: 'Hot', color: 'bg-nest-pink' };
+    if (product.id % 5 === 0) return { text: 'New', color: 'bg-nest-primary' };
+    if (product.id % 3 === 0) return { text: 'Sale', color: 'bg-nest-yellow' };
+    return null;
+  };
 
-      {/* Discount Badge */}
-      {product.discountPercentage > 0 && (
-        <span className="absolute top-4 left-4 z-10 bg-primary text-white text-[10px] font-black px-2 py-1 rounded-lg shadow-lg shadow-primary/20">
-          -{Math.round(product.discountPercentage)}%
+  const badge = getBadge();
+
+  return (
+    <div className="group bg-white rounded-[15px] overflow-hidden border border-nest-border hover:border-nest-primary/30 hover:shadow-xl transition-all duration-300 relative flex flex-col h-full font-heading">
+      {/* Badge */}
+      {badge && (
+        <span className={`absolute top-0 left-0 z-10 ${badge.color} text-white text-[12px] font-medium px-4 py-1.5 rounded-br-[20px] rounded-tl-[15px]`}>
+          {badge.text}
         </span>
       )}
 
-      {/* Image Gallery Area */}
-      <Link 
-        to={`/product/${product.id}`}
-        className="block aspect-square overflow-hidden bg-slate-50 relative group-hover:bg-white transition-colors duration-500"
-      >
-        <img
-          src={product.thumbnail}
-          alt={product.title}
-          className="w-full h-full object-contain p-6 group-hover:scale-110 transition-transform duration-700 ease-out"
-        />
-      </Link>
-
-      {/* Info Area */}
-      <div className="p-5 flex-grow flex flex-col space-y-3">
-        <div className="flex items-center justify-between">
-          <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{product.category}</span>
-          <div className="flex items-center gap-1">
-             <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-             <span className="text-[10px] font-bold text-slate-700">{product.rating}</span>
-          </div>
+      {/* Image Area */}
+      <div className="relative aspect-square overflow-hidden p-8 flex items-center justify-center">
+        <Link to={`/product/${product.id}`} className="block w-full h-full">
+          <img
+            src={product.thumbnail}
+            alt={product.title}
+            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+          />
+        </Link>
+        
+        {/* Hover Actions */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-hover:pointer-events-auto">
+          <ActionButton icon={<Heart className="w-4 h-4" />} />
+          <ActionButton icon={<GitCompare className="w-4 h-4" />} />
+          <ActionButton icon={<Eye className="w-4 h-4" />} />
         </div>
+      </div>
 
-        <Link to={`/product/${product.id}`} className="block">
-          <h3 className="font-bold text-slate-800 text-sm leading-snug group-hover:text-primary transition-colors line-clamp-2 min-h-[40px]">
+      {/* Content */}
+      <div className="px-5 pb-5 flex-grow flex flex-col">
+        <span className="text-[12px] text-nest-text mb-1">{product.category}</span>
+        <Link to={`/product/${product.id}`} className="block mb-2">
+          <h3 className="font-bold text-nest-dark text-md leading-snug hover:text-nest-primary transition-colors line-clamp-2 min-h-[44px]">
             {product.title}
           </h3>
         </Link>
         
-        <div className="flex flex-col pt-1">
-          <div className="flex items-baseline gap-2">
-            <span className="text-xl font-black text-slate-900">${product.price}</span>
-            {product.discountPercentage > 0 && (
-              <span className="text-xs text-slate-400 line-through font-medium">
-                ${(product.price * (1 + product.discountPercentage / 100)).toFixed(2)}
-              </span>
-            )}
+        {/* Rating */}
+        <div className="flex items-center gap-1 mb-3">
+          <div className="flex items-center">
+            {[...Array(5)].map((_, i) => (
+              <Star 
+                key={i} 
+                className={`w-3 h-3 ${i < Math.floor(product.rating) ? 'fill-nest-yellow text-nest-yellow' : 'text-gray-300'}`} 
+              />
+            ))}
           </div>
-          <span className="text-[10px] text-primary font-bold">1 kg / 1 dona</span>
+          <span className="text-[12px] text-nest-text">({product.rating})</span>
         </div>
-      </div>
 
-      {/* Full Width Button */}
-      <div className="px-5 pb-5">
-        <button
-          onClick={handleAddToCart}
-          className="w-full py-3 bg-primary text-white rounded-[14px] flex items-center justify-center gap-2 font-black text-xs hover:bg-primary-dark active:scale-[0.97] transition-all shadow-xl shadow-primary/10 group-hover:shadow-primary/20"
-        >
-          <ShoppingCart className="w-3.5 h-3.5" />
-          Savatga
-        </button>
+        <div className="mt-auto">
+          <div className="flex items-center gap-1 mb-1">
+             <span className="text-[12px] text-nest-text">By</span>
+             <span className="text-[12px] text-nest-primary font-bold hover:text-nest-yellow transition-colors cursor-pointer">NestFood</span>
+          </div>
+
+          <div className="flex items-center justify-between mt-2">
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-bold text-nest-primary">${product.price}</span>
+              {product.discountPercentage > 0 && (
+                <span className="text-[14px] text-nest-text line-through opacity-60 font-bold">
+                  ${(product.price * (1 + product.discountPercentage / 100)).toFixed(2)}
+                </span>
+              )}
+            </div>
+            
+            <button
+              onClick={handleAddToCart}
+              className="flex items-center gap-2 px-5 py-2 bg-nest-red/10 text-nest-red hover:bg-nest-red hover:text-white rounded-[4px] font-bold text-sm transition-all active:scale-95"
+            >
+              <Plus className="w-4 h-4" />
+              Add
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
+
+const ActionButton = ({ icon }) => (
+  <button className="w-9 h-9 bg-white border border-nest-primary/20 rounded-[5px] flex items-center justify-center text-nest-primary hover:bg-nest-primary hover:text-white hover:border-nest-primary transition-all shadow-md">
+    {icon}
+  </button>
+);
 
 export default ProductCard;

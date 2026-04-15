@@ -1,10 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", "Outfit", system-ui, sans-serif;
-  --color-primary: #5CB338;
-  --color-primary-dark: #4a912d;
-  --color-bg-soft: #EDF7E8;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-heading: "Quicksand", "Inter", sans-serif;
+  
+  --color-nest-primary: #3BB77E;
+  --color-nest-primary-hover: #29A56C;
+  --color-nest-dark: #253D4E;
+  --color-nest-text: #7E7E7E;
+  --color-nest-pink: #F74B81;
+  --color-nest-red: #FD6E6E;
+  --color-nest-yellow: #FDC040;
+  --color-nest-bg: #F4F6FA;
+  --color-nest-border: #ececec;
+
+  /* Legacy primary for compatibility */
+  --color-primary: var(--color-nest-primary);
+  --color-primary-dark: var(--color-nest-primary-hover);
+  --color-accent: var(--color-nest-red);
 }
 
 @layer base {
