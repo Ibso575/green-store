@@ -1,10 +1,11 @@
 import React from 'react';
 import { useProducts } from '../../hooks/useProducts';
-import { Plus, ShoppingCart } from 'lucide-react';
+import { Plus, ShoppingCart, Star } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { addItem } from '../../store/cartSlice';
 import { Link } from 'react-router-dom';
 import dailyBanner from '../../assets/daily-banner.png';
+import ProductSkeleton from '../ProductSkeleton';
 
 const DailyBestSells = () => {
   const { data, isLoading } = useProducts({ category: 'groceries', limit: 4, skip: 5 });
@@ -38,9 +39,11 @@ const DailyBestSells = () => {
         {/* Products Grid */}
         <div className="lg:w-3/4">
             {isLoading ? (
-              [...Array(4)].map((_, i) => (
-                <div key={i} className="bg-gray-100 h-[450px] rounded-[15px] animate-pulse"></div>
-              ))
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                {[...Array(4)].map((_, i) => (
+                  <ProductSkeleton key={i} />
+                ))}
+              </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 {data?.products?.map((product) => (
@@ -55,52 +58,69 @@ const DailyBestSells = () => {
 };
 
 const DailyProductCard = ({ product, onAdd }) => {
-  // Mock stock data for the progress bar
   const total = 120;
-  const sold = Math.floor(product.rating * 20); // Just for visual
+  const sold = Math.floor(product.rating * 20); 
 
   return (
-    <div className="bg-white border border-nest-border rounded-[15px] p-5 flex flex-col h-full hover:shadow-xl transition-all group">
-       <div className="aspect-square mb-4 p-4 flex items-center justify-center relative">
+    <div className="bg-white border border-nest-border rounded-[15px] p-5 flex flex-col h-full hover:shadow-[20px_20px_40px_rgba(0,0,0,0.05)] transition-all group overflow-hidden relative">
+       {/* Hot Badge */}
+       {product.discountPercentage > 15 && (
+         <span className="absolute top-0 left-0 bg-nest-pink text-white text-[12px] font-bold px-4 py-1.5 rounded-br-[20px] rounded-tl-[15px] z-10">
+            Hot
+         </span>
+       )}
+
+       <div className="aspect-square mb-6 p-4 flex items-center justify-center relative bg-[#f8f9fa] rounded-[10px] group-hover:bg-white transition-colors duration-300">
           <Link to={`/product/${product.id}`} className="block w-full h-full">
             <img 
               src={product.thumbnail} 
               alt={product.title} 
-              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" 
+              className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700" 
             />
           </Link>
-          {product.discountPercentage > 15 && (
-            <span className="absolute top-0 left-0 bg-nest-red text-white text-[12px] font-medium px-4 py-1.5 rounded-br-[20px] rounded-tl-[10px]">
-               Hot
-            </span>
-          )}
        </div>
 
        <div className="flex-grow flex flex-col">
-          <span className="text-[12px] text-nest-text mb-1">{product.category}</span>
+          <span className="text-[12px] text-nest-text/70 mb-1 font-bold uppercase tracking-wider">{product.category}</span>
           <Link to={`/product/${product.id}`}>
-            <h4 className="font-bold text-nest-dark hover:text-nest-primary transition-colors line-clamp-2 min-h-[44px] mb-2">
+            <h4 className="font-bold text-nest-dark hover:text-nest-primary transition-colors text-md leading-snug line-clamp-2 min-h-[44px] mb-3">
               {product.title}
             </h4>
           </Link>
 
-          <div className="flex items-center gap-2 mb-4">
-             <span className="text-lg font-bold text-nest-primary">${product.price}</span>
-             <span className="text-sm text-nest-text line-through opacity-60 font-medium">${(product.price * 1.25).toFixed(2)}</span>
+          {/* Rating */}
+          <div className="flex items-center gap-1 mb-4">
+             <div className="flex items-center">
+               {[...Array(5)].map((_, i) => (
+                 <Star 
+                   key={i} 
+                   className={`w-3 h-3 ${i < Math.floor(product.rating) ? 'fill-nest-yellow text-nest-yellow' : 'text-gray-300'}`} 
+                 />
+               ))}
+             </div>
+             <span className="text-[12px] text-nest-text">({product.rating})</span>
           </div>
 
-          <div className="mt-auto space-y-3">
+          <div className="flex items-center gap-2 mb-4">
+             <span className="text-xl font-bold text-nest-primary">${product.price}</span>
+             <span className="text-sm text-nest-text line-through opacity-50 font-bold">${(product.price * 1.25).toFixed(2)}</span>
+          </div>
+
+          <div className="mt-auto space-y-4">
              {/* Progress Bar */}
-             <div className="space-y-1.5">
-                <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
-                   <div className="h-full bg-nest-primary" style={{ width: `${(sold/total)*100}%` }}></div>
+             <div className="space-y-2">
+                <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                   <div 
+                     className="h-full bg-nest-primary transition-all duration-1000" 
+                     style={{ width: `${(sold/total)*100}%` }}
+                   ></div>
                 </div>
-                <p className="text-[13px] text-nest-dark font-medium">Sold: {sold}/{total}</p>
+                <p className="text-[13px] text-nest-dark font-bold">Sold: <span className="text-nest-text font-medium">{sold}/{total}</span></p>
              </div>
 
              <button 
                onClick={onAdd}
-               className="w-full py-2.5 bg-nest-red hover:bg-nest-red/90 text-white rounded-[4px] font-bold text-sm flex items-center justify-center gap-2 transition-all"
+               className="w-full py-3 bg-nest-primary hover:bg-nest-primary/90 text-white rounded-[4px] font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-nest-primary/20"
              >
                <ShoppingCart className="w-4 h-4" />
                Add to Cart
@@ -110,5 +130,6 @@ const DailyProductCard = ({ product, onAdd }) => {
     </div>
   );
 };
+
 
 export default DailyBestSells;

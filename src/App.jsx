@@ -1,3 +1,4 @@
+// src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import CategoryNav from './components/CategoryNav';
@@ -6,6 +7,7 @@ import Home from './pages/Home';
 import ProductDetail from './pages/ProductDetail';
 import CartPage from './pages/CartPage';
 import CategoryPage from './pages/CategoryPage';
+import CheckoutPage from './pages/CheckoutPage'; // ✅ yangi sahifa import
 
 function App() {
   return (
@@ -19,6 +21,7 @@ function App() {
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/category/:slug" element={<CategoryPage />} />
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} /> {/* ✅ checkout sahifa */}
           </Routes>
         </main>
         <Footer />

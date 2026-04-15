@@ -1,9 +1,8 @@
 import React from 'react';
-import { ShoppingCart, X, Plus, Minus, Trash2, ArrowRight } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateQuantity, removeItem } from '../store/cartSlice';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Minus, Plus, Trash2, X } from 'lucide-react';
 
 const CartDrawer = ({ isOpen, onClose }) => {
   const cartItems = useSelector((state) => state.cart.items);
@@ -11,104 +10,112 @@ const CartDrawer = ({ isOpen, onClose }) => {
   const total = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   return (
-    <AnimatePresence>
+    <>
+      {/* Overlay */}
       {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60]"
-          />
-          
-          {/* Drawer */}
-          <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl z-[70] flex flex-col"
-          >
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <ShoppingCart className="w-5 h-5 text-green-600" />
-                <h2 className="text-xl font-bold">Your Cart</h2>
-                <span className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full text-xs font-bold">
-                  {cartItems.length}
-                </span>
-              </div>
-              <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
-                <X className="w-5 h-5" />
+        <div 
+          className="fixed inset-0 bg-black/50 z-[100] transition-opacity"
+          onClick={onClose}
+        ></div>
+      )}
+      
+      {/* Drawer */}
+      <div 
+        className={`fixed inset-y-0 right-0 w-full sm:w-[400px] bg-white shadow-2xl z-[110] transform transition-transform duration-300 ease-in-out flex flex-col font-heading ${
+          isOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <div className="flex items-center justify-between p-5 border-b border-nest-border">
+          <h2 className="text-xl font-bold text-nest-dark">Shopping Cart ({cartItems.length})</h2>
+          <button onClick={onClose} className="p-2 text-nest-text hover:text-nest-primary hover:bg-gray-100 rounded-full transition-colors flex-shrink-0">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="flex-grow overflow-y-auto p-5">
+          {cartItems.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full space-y-4 text-center">
+              <p className="text-nest-text font-medium text-lg">Your cart is empty</p>
+              <button
+                onClick={onClose}
+                className="bg-nest-primary text-white px-8 py-3 rounded-[4px] font-bold hover:bg-nest-primary/90 transition-all active:scale-95"
+              >
+                Start Shopping
               </button>
             </div>
-
-            <div className="flex-grow overflow-y-auto p-6 space-y-6">
-              {cartItems.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
-                  <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center">
-                    <ShoppingCart className="w-8 h-8 text-slate-200" />
-                  </div>
-                  <p className="text-slate-500 font-medium">Your cart is empty</p>
-                  <button onClick={onClose} className="text-green-600 font-bold text-sm">Start Shopping</button>
-                </div>
-              ) : (
-                cartItems.map((item) => (
-                  <div key={item.id} className="flex gap-4 group">
-                    <img src={item.thumbnail} alt="" className="w-20 h-20 object-cover rounded-2xl bg-slate-50 border border-slate-100" />
-                    <div className="flex-grow space-y-1">
-                      <h3 className="font-bold text-slate-900 group-hover:text-green-600 transition-colors line-clamp-1">{item.title}</h3>
-                      <p className="text-sm font-bold text-slate-400">${item.price}</p>
-                      <div className="flex items-center justify-between pt-2">
-                        <div className="flex items-center gap-2 bg-slate-50 rounded-lg p-1">
-                          <button 
-                            onClick={() => dispatch(updateQuantity({ id: item.id, quantity: item.quantity - 1 }))}
-                            className="p-1 hover:bg-white rounded shadow-sm transition-all"
-                          >
-                            <Minus className="w-3 h-3" />
-                          </button>
-                          <span className="w-6 text-center text-xs font-bold">{item.quantity}</span>
-                          <button 
-                            onClick={() => dispatch(updateQuantity({ id: item.id, quantity: item.quantity + 1 }))}
-                            className="p-1 hover:bg-white rounded shadow-sm transition-all"
-                          >
-                            <Plus className="w-3 h-3" />
-                          </button>
-                        </div>
-                        <button onClick={() => dispatch(removeItem(item.id))} className="text-rose-500 hover:text-rose-600">
-                          <Trash2 className="w-4 h-4" />
+          ) : (
+            <div className="space-y-5">
+              {cartItems.map((item) => (
+                <div key={item.id} className="flex gap-4 border-b border-nest-border pb-5">
+                  <img
+                    src={item.thumbnail}
+                    alt={item.title}
+                    className="w-20 h-20 object-contain rounded-[8px] bg-[#f8f9fa] border border-nest-border p-1"
+                  />
+                  <div className="flex-grow flex flex-col justify-between">
+                    <div>
+                      <Link to={`/product/${item.id}`} onClick={onClose}>
+                        <h4 className="font-bold text-sm text-nest-dark hover:text-nest-primary transition-colors line-clamp-2">{item.title}</h4>
+                      </Link>
+                      <p className="text-nest-primary font-bold text-sm mt-1">${item.price}</p>
+                    </div>
+                    <div className="flex items-center justify-between mt-3">
+                      <div className="flex items-center gap-3 border rounded-[4px] border-nest-border/80 p-1">
+                        <button
+                          onClick={() => dispatch(updateQuantity({ id: item.id, quantity: item.quantity - 1 }))}
+                          className="p-1 text-nest-text hover:text-nest-primary transition-colors"
+                        >
+                          <Minus className="w-3.5 h-3.5" />
+                        </button>
+                        <span className="w-6 text-center text-[13px] font-bold text-nest-dark">{item.quantity}</span>
+                        <button
+                          onClick={() => dispatch(updateQuantity({ id: item.id, quantity: item.quantity + 1 }))}
+                          className="p-1 text-nest-text hover:text-nest-primary transition-colors"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
                         </button>
                       </div>
+                      <button
+                        onClick={() => dispatch(removeItem(item.id))}
+                        className="text-nest-text hover:text-nest-red transition-colors p-1"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
-                ))
-              )}
-            </div>
-
-            {cartItems.length > 0 && (
-              <div className="p-6 border-t border-slate-100 space-y-4">
-                <div className="flex justify-between items-end">
-                  <span className="text-slate-500 text-sm font-medium">Total Balance</span>
-                  <span className="text-2xl font-black">${total.toFixed(2)}</span>
                 </div>
-                <Link 
-                  to="/cart" 
-                  onClick={onClose}
-                  className="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition-colors"
-                >
-                  View Full Cart
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-                <button className="w-full bg-green-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-green-100 hover:bg-green-700 transition-colors">
-                  Checkout Now
-                </button>
-              </div>
-            )}
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Footer Area */}
+        {cartItems.length > 0 && (
+          <div className="border-t border-nest-border p-5 space-y-4 bg-white sticky bottom-0">
+            <div className="flex justify-between items-center text-[16px] font-bold">
+              <span className="text-nest-dark">Total:</span>
+              <span className="text-nest-primary text-xl">${total.toFixed(2)}</span>
+            </div>
+            <div className="grid grid-cols-2 gap-3 pt-2">
+              <Link
+                to="/cart"
+                onClick={onClose}
+                className="w-full text-center border-2 border-nest-primary text-nest-primary py-3 rounded-[4px] font-bold hover:bg-nest-primary hover:text-white transition-all text-[13px] uppercase tracking-wide"
+              >
+                View Cart
+              </Link>
+              <Link
+                to="/checkout"
+                onClick={onClose}
+                className="w-full text-center bg-nest-primary text-white py-3 rounded-[4px] font-bold hover:bg-nest-primary/90 transition-all active:scale-95 text-[13px] uppercase tracking-wide"
+              >
+                Checkout
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

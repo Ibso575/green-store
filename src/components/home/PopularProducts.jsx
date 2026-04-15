@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useProducts } from '../../hooks/useProducts';
 import ProductCard from '../ProductCard';
+import ProductSkeleton from '../ProductSkeleton';
+
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 
 const categories = ["All", "Milks & Dairies", "Coffee & Teas", "Pet Foods", "Meats", "Vegetables", "Fruits"];
@@ -32,7 +35,7 @@ const PopularProducts = () => {
       {isLoading ? (
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
           {[...Array(10)].map((_, i) => (
-            <div key={i} className="bg-gray-100 aspect-[3/4] rounded-[15px] animate-pulse"></div>
+            <ProductSkeleton key={i} />
           ))}
         </div>
       ) : (
