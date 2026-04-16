@@ -24,8 +24,8 @@ const CartPage = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-black mb-8">Shopping Cart</h1>
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
+      <div className="overflow-x-auto w-full">
+        <table className="w-full border-collapse min-w-[650px]">
           <thead>
             <tr className="bg-slate-100 text-left">
               <th className="p-3">Product</th>
@@ -38,9 +38,11 @@ const CartPage = () => {
           <tbody>
             {cartItems.map((item) => (
               <tr key={item.id} className="border-b">
-                <td className="p-3 flex items-center gap-3">
-                  <img src={item.thumbnail} alt={item.title} className="w-16 h-16 object-cover rounded-lg border" />
-                  <span className="font-bold">{item.title}</span>
+                <td className="p-3 px-4 min-w-[250px]">
+                  <div className="flex items-center gap-3">
+                    <img src={item.thumbnail} alt={item.title} className="w-16 h-16 object-cover rounded-lg border flex-shrink-0" />
+                    <span className="font-bold line-clamp-2 leading-tight">{item.title}</span>
+                  </div>
                 </td>
                 <td className="p-3">${item.price}</td>
                 <td className="p-3">
@@ -66,14 +68,14 @@ const CartPage = () => {
         </table>
       </div>
 
-      <div className="mt-8 flex justify-between items-center">
+      <div className="mt-8 flex flex-col-reverse sm:flex-row gap-8 justify-between items-center sm:items-start">
         <Link to="/" className="text-primary font-bold">Continue Shopping</Link>
-        <div className="text-right">
+        <div className="text-center sm:text-right w-full sm:w-auto">
           <p className="text-slate-500">Total Balance</p>
           <p className="text-2xl font-black">${total.toFixed(2)}</p>
           <button
             onClick={() => navigate("/checkout")}
-            className="mt-4 bg-primary text-white px-6 py-3 rounded-lg font-bold"
+            className="mt-4 bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-lg font-bold w-full sm:w-auto transition-colors"
           >
             Proceed to Checkout
           </button>

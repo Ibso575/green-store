@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { ShoppingCart, Search, User, Menu, Heart, Phone, ChevronDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ShoppingCart, Search, User, Menu, Heart, Phone, ChevronDown, Home, LayoutGrid } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import CartDrawer from './CartDrawer';
 import logo from '../assets/logo.svg'
@@ -8,8 +8,18 @@ import logo from '../assets/logo.svg'
 const Header = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [headerSearch, setHeaderSearch] = useState('');
   const cartItems = useSelector((state) => state.cart.items);
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const navigate = useNavigate();
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if(headerSearch.trim()) {
+       navigate(`/shop?q=${encodeURIComponent(headerSearch.trim())}`);
+       setHeaderSearch('');
+    }
+  };
 
   return (
     <div className="w-full bg-white font-heading">
@@ -64,19 +74,21 @@ const Header = () => {
           <div className="hidden lg:flex flex-grow items-center justify-between gap-10">
             {/* Search Bar */}
             <div className="flex-grow max-w-2xl">
-              <div className="flex items-center border border-nest-border rounded-[4px] h-11 bg-white focus-within:border-nest-primary transition-all overflow-hidden">
-                <button className="px-5 h-full flex items-center gap-2 text-nest-dark font-bold text-[13px] border-r border-nest-border hover:text-nest-primary shrink-0">
+              <form onSubmit={handleSearchSubmit} className="flex items-center border border-nest-border rounded-[4px] h-11 bg-white focus-within:border-nest-primary transition-all overflow-hidden">
+                <button type="button" className="px-5 h-full flex items-center gap-2 text-nest-dark font-bold text-[13px] border-r border-nest-border hover:text-nest-primary shrink-0">
                   All Categories <ChevronDown className="w-3 h-3" />
                 </button>
                 <input
                   type="text"
+                  value={headerSearch}
+                  onChange={(e) => setHeaderSearch(e.target.value)}
                   placeholder="Search For Items..."
                   className="flex-grow h-full px-4 outline-none text-[13px] text-nest-dark placeholder:text-nest-text/40 font-medium"
                 />
-                <button className="px-5 h-full bg-nest-red text-white hover:bg-nest-red/90 transition-colors">
+                <button type="submit" className="px-5 h-full bg-nest-red text-white hover:bg-nest-red/90 transition-colors">
                   <Search className="w-4 h-4" />
                 </button>
-              </div>
+              </form>
             </div>
 
             {/* User Actions */}
@@ -130,7 +142,7 @@ const Header = () => {
                   <Link to="/products" onClick={() => setIsMenuOpen(false)} className="hover:text-nest-primary transition-colors">Products</Link>
                   <Link to="/pages" onClick={() => setIsMenuOpen(false)} className="hover:text-nest-primary transition-colors">Pages</Link>
                   <Link to="/blog" onClick={() => setIsMenuOpen(false)} className="hover:text-nest-primary transition-colors">Blog</Link>
-                  <Link onClick={() => {setIsCartOpen(true); setIsMenuOpen(false)}} className="hover:text-nest-primary transition-colors capitalize">Cart ({cartCount})</Link>
+                  <button onClick={() => {setIsCartOpen(true); setIsMenuOpen(false)}} className="hover:text-nest-primary transition-colors capitalize text-left">Cart ({cartCount})</button>
                </nav>
 
                <div className="mt-auto pt-10 border-t">
@@ -144,6 +156,35 @@ const Header = () => {
       </div>
 
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+
+      {/* 4. Mobile Bottom Navigation Bar */}
+      <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t border-nest-border px-6 py-2.5 flex justify-between items-center z-[90] shadow-[0_-5px_15px_rgba(0,0,0,0.03)] pb-[envs(safe-area-inset-bottom)]">
+         <Link to="/" className="flex flex-col items-center gap-1 text-nest-text hover:text-nest-primary transition-colors">
+            <Home className="w-5 h-5" />
+            <span className="text-[10px] font-bold">Home</span>
+         </Link>
+         <Link to="/shop" className="flex flex-col items-center gap-1 text-nest-text hover:text-nest-primary transition-colors">
+            <LayoutGrid className="w-5 h-5" />
+            <span className="text-[10px] font-bold">Shop</span>
+         </Link>
+         <Link to="/shop" className="flex flex-col items-center gap-1 text-nest-text hover:text-nest-primary transition-colors">
+            <Heart className="w-5 h-5" />
+            <span className="text-[10px] font-bold">Wishlist</span>
+         </Link>
+         <button onClick={() => setIsCartOpen(true)} className="flex flex-col items-center gap-1 text-nest-primary transition-colors relative">
+            <div className="relative">
+               <ShoppingCart className="w-5 h-5" />
+               <span className="absolute -top-1.5 -right-2 w-4 h-4 bg-nest-red text-white text-[9px] font-bold flex items-center justify-center rounded-full border border-white">
+                 {cartCount}
+               </span>
+            </div>
+            <span className="text-[10px] font-bold">Cart</span>
+         </button>
+         <Link to="/shop" className="flex flex-col items-center gap-1 text-nest-text hover:text-nest-primary transition-colors">
+            <User className="w-5 h-5" />
+            <span className="text-[10px] font-bold">Account</span>
+         </Link>
+      </div>
     </div>
   );
 };

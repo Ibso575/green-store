@@ -4,8 +4,8 @@ import { Send } from "lucide-react";
 
 const Hero = () => {
   return (
-    <section className="container-custom py-10">
-      <div className="relative bg-[#F2F3F5] rounded-[30px] overflow-hidden min-h-[520px] flex items-center">
+    <section className="container-custom py-6 lg:py-10">
+      <div className="relative bg-[#F2F3F5] rounded-[20px] md:rounded-[30px] overflow-hidden min-h-[400px] lg:min-h-[520px] flex items-center py-12 lg:py-0">
 
         {/* TOP TAGS */}
         <div className="absolute top-10 right-10 hidden lg:flex items-center gap-3 z-20">
@@ -20,7 +20,7 @@ const Hero = () => {
         </div>
 
         {/* LEFT CONTENT */}
-        <div className="w-full flex flex-col lg:flex-row items-center justify-between px-10 lg:px-20 gap-10 relative z-10">
+        <div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between px-6 md:px-10 lg:px-20 gap-8 lg:gap-10 relative z-10">
 
           <div className="max-w-2xl space-y-6">
             {/* Small Title */}
@@ -30,7 +30,7 @@ const Hero = () => {
             </p>
 
             {/* Main Heading */}
-            <h1 className="text-5xl lg:text-[70px] font-black text-gray-900 leading-[1.05] tracking-tight">
+            <h1 className="text-4xl sm:text-5xl lg:text-[70px] font-black text-gray-900 leading-[1.1] tracking-tight">
               The best way to <br /> stuff your wallet.
             </h1>
 
@@ -41,18 +41,18 @@ const Hero = () => {
             </p>
 
             {/* EMAIL INPUT */}
-            <div className="flex max-w-lg bg-white rounded-full p-1 shadow-lg overflow-hidden border border-gray-200">
-              <div className="flex items-center px-4">
+            <div className="flex max-w-lg bg-white rounded-full p-1 shadow-lg overflow-hidden border border-gray-200 w-full">
+              <div className="hidden sm:flex items-center px-4">
                 <Send className="w-5 h-5 text-gray-400" />
               </div>
 
               <input
                 type="email"
                 placeholder="Your email address"
-                className="flex-grow px-2 py-4 outline-none text-[16px] text-gray-800 font-medium"
+                className="w-full min-w-0 flex-grow px-4 sm:px-2 py-3 lg:py-4 outline-none text-[14px] lg:text-[16px] text-gray-800 font-medium bg-transparent"
               />
 
-              <button className="bg-[#3BB77E] hover:bg-[#29A56C] text-white px-10 py-4 rounded-full font-bold text-[16px] transition-all active:scale-95">
+              <button className="bg-[#3BB77E] hover:bg-[#29A56C] text-white px-6 lg:px-10 py-3 lg:py-4 rounded-full font-bold text-[14px] lg:text-[16px] transition-all active:scale-95 whitespace-nowrap">
                 Subscribe
               </button>
             </div>

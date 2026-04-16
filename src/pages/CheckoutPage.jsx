@@ -1,15 +1,29 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { clearCart } from "../store/cartSlice";
 import { Star } from 'lucide-react';
 
 const CheckoutPage = () => {
   const cartItems = useSelector((state) => state.cart.items);
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [delivery, setDelivery] = useState("free");
   const [payment, setPayment] = useState("cod");
   const [newCustomerOpt, setNewCustomerOpt] = useState("register");
   const [addressOpt, setAddressOpt] = useState("new");
+
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: ''
+  });
+
+  const handlePlaceOrder = () => {
+    dispatch(clearCart());
+    navigate('/success');
+  };
 
   return (
     <div className="container-custom py-12 md:py-16 font-heading">
@@ -192,11 +206,11 @@ const CheckoutPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                  <div className="flex flex-col gap-1">
                     <label className="text-[13px] font-bold text-nest-dark mb-0.5">First Name *</label>
-                    <input type="text" placeholder="Enter your first name" className="border border-gray-200 p-2.5 text-[13px] outline-none focus:border-[#FF324D] w-full" />
+                    <input type="text" value={formData.firstName} onChange={(e) => setFormData({...formData, firstName: e.target.value})} placeholder="Enter your first name" className="border border-gray-200 p-2.5 text-[13px] outline-none focus:border-[#FF324D] w-full" />
                  </div>
                  <div className="flex flex-col gap-1">
                     <label className="text-[13px] font-bold text-nest-dark mb-0.5">Last Name *</label>
-                    <input type="text" placeholder="Enter your last name" className="border border-gray-200 p-2.5 text-[13px] outline-none focus:border-[#FF324D] w-full" />
+                    <input type="text" value={formData.lastName} onChange={(e) => setFormData({...formData, lastName: e.target.value})} placeholder="Enter your last name" className="border border-gray-200 p-2.5 text-[13px] outline-none focus:border-[#FF324D] w-full" />
                  </div>
 
                  <div className="flex flex-col gap-1 md:col-span-2">
@@ -206,9 +220,7 @@ const CheckoutPage = () => {
 
                  <div className="flex flex-col gap-1">
                     <label className="text-[13px] font-bold text-nest-dark mb-0.5">City *</label>
-                    <select className="border border-gray-200 p-2.5 text-[13px] outline-none focus:border-[#FF324D] w-full text-gray-500 bg-white">
-                      <option>City</option>
-                    </select>
+                    <input type="text" placeholder="Enter City" className="border border-gray-200 p-2.5 text-[13px] outline-none focus:border-[#FF324D] w-full" />
                  </div>
                  <div className="flex flex-col gap-1">
                     <label className="text-[13px] font-bold text-nest-dark mb-0.5">Post Code</label>
@@ -217,22 +229,20 @@ const CheckoutPage = () => {
 
                  <div className="flex flex-col gap-1">
                     <label className="text-[13px] font-bold text-nest-dark mb-0.5">Country *</label>
-                    <select className="border border-gray-200 p-2.5 text-[13px] outline-none focus:border-[#FF324D] w-full text-gray-500 bg-white">
-                      <option>Country</option>
-                    </select>
+                    <input type="text" placeholder="Enter Country" className="border border-gray-200 p-2.5 text-[13px] outline-none focus:border-[#FF324D] w-full" />
                  </div>
                  <div className="flex flex-col gap-1">
                     <label className="text-[13px] font-bold text-nest-dark mb-0.5">Region / State *</label>
-                    <select className="border border-gray-200 p-2.5 text-[13px] outline-none focus:border-[#FF324D] w-full text-gray-500 bg-white">
-                      <option>Region / State</option>
-                    </select>
+                    <input type="text" placeholder="Enter Region / State" className="border border-gray-200 p-2.5 text-[13px] outline-none focus:border-[#FF324D] w-full" />
                  </div>
               </div>
 
            </div>
            
            <div className="flex justify-end mt-2">
-              <button className="bg-[#FF324D] text-white px-10 py-3 text-[14px] font-bold hover:bg-[#E0263C] transition-colors cursor-pointer rounded-[2px] shadow-sm">
+              <button 
+                onClick={handlePlaceOrder}
+                className="bg-[#FF324D] text-white px-10 py-3 text-[14px] font-bold hover:bg-[#E0263C] transition-colors cursor-pointer rounded-[2px] shadow-sm">
                 Place Order
               </button>
            </div>

@@ -20,7 +20,7 @@ const Home = () => {
 
       {/* Newsletter Section */}
       <section className="container-custom py-10">
-        <div className="relative rounded-[20px] overflow-hidden bg-[#D8F1E5] p-12 lg:p-20 flex items-center min-h-[400px]">
+        <div className="relative rounded-[20px] overflow-hidden bg-[#D8F1E5] p-6 sm:p-12 lg:p-20 flex items-center min-h-[300px] lg:min-h-[400px]">
            {/* Background decorative leaf elements */}
            <div className="absolute inset-0 opacity-10 pointer-events-none">
               <div className="absolute top-10 right-1/4 -rotate-45">
@@ -33,23 +33,23 @@ const Home = () => {
 
            <div className="relative z-10 w-full flex flex-col lg:flex-row items-center justify-between gap-10">
               <div className="max-w-xl space-y-6">
-                 <h2 className="text-3xl md:text-5xl font-black text-nest-dark leading-tight">
-                   Stay home & get your daily <br /> needs from our shop
+                 <h2 className="text-2xl sm:text-3xl md:text-5xl font-black text-nest-dark leading-tight">
+                   Stay home & get your daily <br className="hidden sm:block" /> needs from our shop
                  </h2>
                  <p className="text-nest-text text-lg font-medium">
                    Start You're Daily Shopping with <span className="text-nest-primary font-bold">Nest Mart</span>
                  </p>
                  
-                 <div className="flex max-w-md bg-white rounded-full p-1 shadow-md overflow-hidden group border border-transparent focus-within:border-nest-primary/20 transition-all">
-                   <div className="flex items-center px-4">
+                 <div className="flex max-w-md w-full bg-white rounded-full p-1 shadow-md overflow-hidden group border border-transparent focus-within:border-nest-primary/20 transition-all">
+                   <div className="hidden sm:flex items-center px-4">
                       <Send className="w-5 h-5 text-nest-text opacity-40 group-focus-within:text-nest-primary transition-colors" />
                    </div>
                    <input 
                      type="email" 
                      placeholder="Your email address" 
-                     className="flex-grow px-2 py-4 outline-none text-sm text-nest-dark font-medium"
+                     className="flex-grow w-full min-w-0 px-4 sm:px-2 py-3 lg:py-4 outline-none text-sm text-nest-dark font-medium bg-transparent"
                    />
-                   <button className="bg-nest-red hover:bg-nest-red/90 text-white px-10 py-4 rounded-full font-bold text-sm transition-all active:scale-95 shadow-lg shadow-nest-red/20">
+                   <button className="bg-nest-red hover:bg-nest-red/90 text-white px-6 lg:px-10 py-3 lg:py-4 rounded-full font-bold text-[13px] lg:text-sm transition-all active:scale-95 shadow-lg shadow-nest-red/20 whitespace-nowrap">
                      Subscribe
                    </button>
                  </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import banner1 from '../../assets/banner-1.png';
 import banner2 from '../../assets/banner-2.png';
 import banner3 from '../../assets/banner-3.png';
@@ -31,9 +32,10 @@ const Banners = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
         {bannerData.map((banner) => (
-          <div
+          <Link
+            to="/shop"
             key={banner.id}
-            className="relative h-[260px] rounded-[20px] overflow-hidden group cursor-pointer flex items-center"
+            className="relative h-[260px] rounded-[20px] overflow-hidden group cursor-pointer flex items-center block"
             style={{ backgroundColor: banner.bgColor }}
           >
             {/* TEXT */}
@@ -42,9 +44,9 @@ const Banners = () => {
                 {banner.title}
               </h3>
 
-              <button className="flex items-center gap-2 bg-[#F53E32] hover:bg-[#D73228] text-white px-4 py-2 rounded-[4px] font-bold text-xs w-fit transition-colors">
+              <span className="flex items-center gap-2 bg-[#F53E32] hover:bg-[#D73228] text-white px-4 py-2 rounded-[4px] font-bold text-xs w-fit transition-colors">
                 Shop Now <ArrowRight className="w-4 h-4" />
-              </button>
+              </span>
             </div>
 
             {/* IMAGE — bottom right */}
@@ -53,7 +55,7 @@ const Banners = () => {
               alt={banner.title}
               className="absolute bottom-[20px] right-0 w-[90%] h-auto object-contain group-hover:scale-110 transition-transform duration-700"
             />
-          </div>
+          </Link>
         ))}
 
       </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useProductDetail } from '../hooks/useProducts';
 import { useDispatch } from 'react-redux';
 import { addItem } from '../store/cartSlice';
@@ -9,6 +9,12 @@ const ProductDetail = () => {
   const { id } = useParams();
   const { data: product, isLoading } = useProductDetail(id);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleBuyNow = () => {
+    dispatch(addItem(product));
+    navigate('/checkout');
+  };
 
   if (isLoading) {
     return (
@@ -100,7 +106,10 @@ const ProductDetail = () => {
                 <ShoppingCart className="w-6 h-6" />
                 Саватга қўшиш
               </button>
-              <button className="px-12 py-5 bg-slate-900 text-white rounded-[24px] font-black hover:bg-slate-800 transition-colors shadow-2xl shadow-slate-900/10">
+              <button 
+                onClick={handleBuyNow}
+                className="px-12 py-5 bg-slate-900 text-white rounded-[24px] font-black hover:bg-slate-800 transition-colors shadow-2xl shadow-slate-900/10"
+              >
                 Ҳозироқ сотиб олиш
               </button>
             </div>
